@@ -14,7 +14,7 @@ docker:
 
 .PHONY: clean
 clean:
-	@rm -rf ./build
+	@rm -vf ./build/*.o ./build/*.bin
 
 build/lib$(LNFS_NAME).o: lib/lnfs.cpp
 	@install -d -m 0750 ./build
