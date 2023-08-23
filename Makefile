@@ -18,12 +18,10 @@ docker:
 
 .PHONY: clean
 clean:
-	@rm -vf ./build/*.o ./build/*.bin
+	@rm -vf ./build/*.*
 
-$(BUILDD)/lib$(LNFS_NAME).o: include/*.h lib/*.cpp
-	@install -d -m 0750 ./build
-	$(CXX) $(CXX_FLAGS) -c -o $(BUILDD)/lib$(LNFS_NAME).o $(SRCD)/lib/lnfs.cpp
+$(BUILDD)/lib$(LNFS_NAME).o: $(SRCD)/include/*.h $(SRCD)/lib/*.cpp
+	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lib$(LNFS_NAME).o -c $(SRCD)/lib/lnfs.cpp
 
 $(BUILDD)/$(LNFS_NAME).bin: $(BUILDD)/lib$(LNFS_NAME).o $(SRCD)/bin/lnfs/main.cpp
-	@install -d -m 0750 ./build
 	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/$(LNFS_NAME).bin $(SRCD)/bin/lnfs/main.cpp $(CXX_LIBS)
