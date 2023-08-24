@@ -17,7 +17,10 @@
 
 #include <fuse.h>
 
-#include "lnfs_build.h"
-#include "lnfs_log.h"
+#include <string>
+
+using namespace std;
+
+string lnfs_name();
 
 #endif // LNFS_H_

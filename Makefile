@@ -3,8 +3,10 @@
 
 LNFS_NAME ?= linnetfs
 
+BUILD_DIR ?= build
+
 SRCD := $(PWD)
-BUILDD := $(SRCD)/build
+BUILDD := $(SRCD)/$(BUILD_DIR)
 
 LNFS_LIB   := $(BUILDD)/lib$(LNFS_NAME).a
 LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
@@ -27,7 +29,7 @@ docker:
 
 .PHONY: clean
 clean:
-	@rm -vrf ./build/*.* ./build/include
+	@rm -vrf ./build/*.* ./build/debug ./build/include
 
 .PHONY: build
 build:
@@ -35,7 +37,19 @@ build:
 
 .PHONY: debug
 debug:
-	@$(MAKE) build CXX_EXTRA_FLAGS=-DLNFS_DEBUG
+	@mkdir -vp $(BUILDD)/debug
+	@$(MAKE) BUILD_DIR=build/debug build CXX_EXTRA_FLAGS=-DLNFS_DEBUG
+
+# lnfs_build.h
+
+$(BUILDD)/include/lnfs_build.h: Makefile
+	@mkdir -vp $(BUILDD)/include
+	@echo "#define LNFS_NAME \"$(LNFS_NAME)\"" >$(BUILDD)/include/lnfs_build.h
+
+# lnfs.o
+
+$(BUILDD)/lnfs.o: $(BUILDD)/include/lnfs_build.h $(SRCD)/include/lnfs.h $(SRCD)/lib/lnfs.cpp
+	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs.o -c $(SRCD)/lib/lnfs.cpp
 
 # lnfs_log.o
 
@@ -44,13 +58,10 @@ $(BUILDD)/lnfs_log.o: $(SRCD)/include/lnfs_log.h $(SRCD)/lib/lnfs_log.cpp
 
 # liblnfs
 
-$(BUILDD)/include/lnfs_build.h:
-	@mkdir -vp $(BUILDD)/include
-	@echo "#define LNFS_NAME $(LNFS_NAME)" >$(BUILDD)/include/lnfs_build.h
+LNFS_LIB_OBJ := $(BUILDD)/lnfs.o
+LNFS_LIB_OBJ += $(BUILDD)/lnfs_log.o
 
-LNFS_LIB_OBJ := $(BUILDD)/lnfs_log.o
-
-$(LNFS_LIB): $(SRCD)/include/lnfs.h $(BUILDD)/include/lnfs_build.h $(LNFS_LIB_OBJ)
+$(LNFS_LIB): $(LNFS_LIB_OBJ)
 	@rm -vf $(LNFS_LIB)
 	@$(AR) rv $(LNFS_LIB) $(LNFS_LIB_OBJ)
 
