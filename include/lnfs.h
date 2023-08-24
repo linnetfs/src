@@ -1,3 +1,6 @@
+/* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
+/* See LICENSE file. */
+
 #ifndef LNFS_H_
 #define LNFS_H_
 

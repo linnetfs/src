@@ -1,16 +1,21 @@
-LNFS_NAME ?= lnfs
+# Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com>
+# See LICENSE file.
+
+LNFS_NAME ?= linnetfs
 
 SRCD := $(PWD)
 BUILDD := $(SRCD)/build
 
-CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -I/usr/include/fuse3 -I$(SRCD)/include
-CXX_LIBS := $(BUILDD)/lib$(LNFS_NAME).o -lfuse3 -lpthread
+LNFS_LIB   := $(BUILDD)/lib$(LNFS_NAME).o
+LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
+
+CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -I/usr/include/fuse3
+CXX_FLAGS += -I$(SRCD)/include
+
+CXX_LIBS := $(LNFS_LIB) -lfuse3 -lpthread
 
 .PHONY: default
 default: build
-
-.PHONY: build
-build: $(BUILDD)/$(LNFS_NAME).bin
 
 .PHONY: docker
 docker:
@@ -20,8 +25,12 @@ docker:
 clean:
 	@rm -vf ./build/*.*
 
-$(BUILDD)/lib$(LNFS_NAME).o: $(SRCD)/include/*.h $(SRCD)/lib/*.cpp
-	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lib$(LNFS_NAME).o -c $(SRCD)/lib/lnfs.cpp
+.PHONY: build
+build:
+	@$(MAKE) $(LNFS_MOUNT)
 
-$(BUILDD)/$(LNFS_NAME).bin: $(BUILDD)/lib$(LNFS_NAME).o $(SRCD)/bin/lnfs/main.cpp
-	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/$(LNFS_NAME).bin $(SRCD)/bin/lnfs/main.cpp $(CXX_LIBS)
+$(LNFS_LIB): $(SRCD)/include/lnfs*.h $(SRCD)/lib/lnfs*.cpp
+	$(CXX) $(CXX_FLAGS) -o $(LNFS_LIB) -c $(SRCD)/lib/lnfs*.cpp
+
+$(LNFS_MOUNT): $(LNFS_LIB) $(SRCD)/bin/lnfs-mount/mount-main.cpp
+	$(CXX) $(CXX_FLAGS) -o $(LNFS_MOUNT) $(SRCD)/bin/lnfs-mount/mount-main.cpp $(CXX_LIBS)
