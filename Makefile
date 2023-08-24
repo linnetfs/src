@@ -6,11 +6,11 @@ LNFS_NAME ?= linnetfs
 SRCD := $(PWD)
 BUILDD := $(SRCD)/build
 
-LNFS_LIB   := $(BUILDD)/lib$(LNFS_NAME).o
+LNFS_LIB   := $(BUILDD)/lib$(LNFS_NAME).a
 LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
 
-CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -I/usr/include/fuse3
-CXX_FLAGS += -I$(SRCD)/include
+CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -pie
+CXX_FLAGS +=  -I/usr/include/fuse3 -I$(SRCD)/include
 
 CXX_LIBS := $(LNFS_LIB) -lfuse3 -lpthread
 
@@ -29,8 +29,20 @@ clean:
 build:
 	@$(MAKE) $(LNFS_MOUNT)
 
-$(LNFS_LIB): $(SRCD)/include/lnfs*.h $(SRCD)/lib/lnfs*.cpp
-	$(CXX) $(CXX_FLAGS) -o $(LNFS_LIB) -c $(SRCD)/lib/lnfs*.cpp
+# lnfs_log.o
+
+$(BUILDD)/lnfs_log.o: $(SRCD)/include/lnfs_log.h $(SRCD)/lib/lnfs_log.cpp
+	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_log.o -c $(SRCD)/lib/lnfs_log.cpp
+
+# liblnfs
+
+LNFS_LIB_OBJ := $(BUILDD)/lnfs_log.o
+
+$(LNFS_LIB): $(LNFS_LIB_OBJ)
+	@rm -vf $(LNFS_LIB)
+	@$(AR) rv $(LNFS_LIB) $(LNFS_LIB_OBJ)
+
+# lnfs-mount
 
 $(LNFS_MOUNT): $(LNFS_LIB) $(SRCD)/bin/lnfs-mount/mount-main.cpp
 	$(CXX) $(CXX_FLAGS) -o $(LNFS_MOUNT) $(SRCD)/bin/lnfs-mount/mount-main.cpp $(CXX_LIBS)
