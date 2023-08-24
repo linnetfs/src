@@ -1,9 +1,9 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#include "lnfs_log.h"
-
 #include <iostream>
+
+#include "lnfs_log.h"
 
 void lnfs_debug(string msg)
 {

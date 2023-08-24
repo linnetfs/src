@@ -38,7 +38,7 @@ build:
 .PHONY: debug
 debug:
 	@mkdir -vp $(BUILDD)/debug
-	@$(MAKE) BUILD_DIR=build/debug build CXX_EXTRA_FLAGS=-DLNFS_DEBUG
+	@$(MAKE) BUILD_DIR=build/debug build CXX_EXTRA_FLAGS='-ggdb -DLNFS_DEBUG'
 
 # lnfs_build.h
 
