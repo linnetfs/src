@@ -7,7 +7,9 @@
 
 void lnfs_debug(string msg)
 {
+#ifdef LNFS_DEBUG
 	cerr << "[D] " << msg << endl;
+#endif
 }
 
 void lnfs_log(string msg)

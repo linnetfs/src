@@ -9,8 +9,11 @@ BUILDD := $(SRCD)/build
 LNFS_LIB   := $(BUILDD)/lib$(LNFS_NAME).a
 LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
 
+CXX_EXTRA_FLAGS ?=
+
 CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -pie
-CXX_FLAGS +=  -I/usr/include/fuse3 -I$(SRCD)/include
+CXX_FLAGS += -I/usr/include/fuse3 -I$(SRCD)/include
+CXX_FLAGS += $(CXX_EXTRA_FLAGS)
 
 CXX_LIBS := $(LNFS_LIB) -lfuse3 -lpthread
 
@@ -28,6 +31,10 @@ clean:
 .PHONY: build
 build:
 	@$(MAKE) $(LNFS_MOUNT)
+
+.PHONY: debug
+debug:
+	@$(MAKE) build CXX_EXTRA_FLAGS=-DLNFS_DEBUG
 
 # lnfs_log.o
 
