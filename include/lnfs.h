@@ -17,6 +17,7 @@
 
 #include <fuse.h>
 
+#include "lnfs_build.h"
 #include "lnfs_log.h"
 
 #endif // LNFS_H_

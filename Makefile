@@ -13,9 +13,10 @@ CXX_EXTRA_FLAGS ?=
 
 CXX_FLAGS := -std=c++23 -Wall -pedantic -O2 -fPIC -pie
 CXX_FLAGS += -I/usr/include/fuse3 -I$(SRCD)/include
+CXX_FLAGS += -I$(BUILDD)/include
 CXX_FLAGS += $(CXX_EXTRA_FLAGS)
 
-CXX_LIBS := $(LNFS_LIB) -lfuse3 -lpthread
+CXX_LIBS := -lfuse3 -lpthread
 
 .PHONY: default
 default: build
@@ -26,7 +27,7 @@ docker:
 
 .PHONY: clean
 clean:
-	@rm -vf ./build/*.*
+	@rm -vrf ./build/*.* ./build/include
 
 .PHONY: build
 build:
@@ -43,13 +44,17 @@ $(BUILDD)/lnfs_log.o: $(SRCD)/include/lnfs_log.h $(SRCD)/lib/lnfs_log.cpp
 
 # liblnfs
 
+$(BUILDD)/include/lnfs_build.h:
+	@mkdir -vp $(BUILDD)/include
+	@echo "#define LNFS_NAME $(LNFS_NAME)" >$(BUILDD)/include/lnfs_build.h
+
 LNFS_LIB_OBJ := $(BUILDD)/lnfs_log.o
 
-$(LNFS_LIB): $(LNFS_LIB_OBJ)
+$(LNFS_LIB): $(SRCD)/include/lnfs.h $(BUILDD)/include/lnfs_build.h $(LNFS_LIB_OBJ)
 	@rm -vf $(LNFS_LIB)
 	@$(AR) rv $(LNFS_LIB) $(LNFS_LIB_OBJ)
 
 # lnfs-mount
 
 $(LNFS_MOUNT): $(LNFS_LIB) $(SRCD)/bin/lnfs-mount/mount-main.cpp
-	$(CXX) $(CXX_FLAGS) -o $(LNFS_MOUNT) $(SRCD)/bin/lnfs-mount/mount-main.cpp $(CXX_LIBS)
+	$(CXX) $(CXX_FLAGS) -o $(LNFS_MOUNT) $(SRCD)/bin/lnfs-mount/mount-main.cpp $(LNFS_LIB) $(CXX_LIBS)
