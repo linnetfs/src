@@ -58,7 +58,7 @@ $(BUILDD)/lnfs_log.o: $(SRCD)/include/lnfs_log.h $(SRCD)/lib/lnfs_log.cpp
 # liblnfs.a
 
 LNFS_LIB_OBJS := $(BUILDD)/lnfs.o
-LNFS_LIB_OBJS += $(BUILDD)/lnfs_log.o
+#~ LNFS_LIB_OBJS += $(BUILDD)/lnfs_log.o
 
 $(LNFS_LIB): $(LNFS_LIB_OBJS)
 	@rm -vf $(LNFS_LIB)
