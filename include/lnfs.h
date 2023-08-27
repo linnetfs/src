@@ -3,19 +3,9 @@
 
 #pragma once
 
-#define FUSE_USE_VERSION 31
+#include "lnfs_fuse.hpp"
+#include "lnfs_utils.hpp"
 
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
+#ifdef LNFS_MODE_passthrough
+#include "lnfs_passthrough.hpp"
 #endif
-
-#ifdef linux
-/* For pread()/pwrite()/utimensat() */
-#define _XOPEN_SOURCE 700
-#endif
-
-#include <fuse.h>
-
-#include <string>
-
-std::string lnfs_name();
