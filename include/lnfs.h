@@ -1,8 +1,7 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#ifndef LNFS_H_
-#define LNFS_H_
+#pragma once
 
 #define FUSE_USE_VERSION 31
 
@@ -19,8 +18,4 @@
 
 #include <string>
 
-using namespace std;
-
-string lnfs_name();
-
-#endif // LNFS_H_
+std::string lnfs_name();

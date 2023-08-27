@@ -4,7 +4,7 @@
 #include "lnfs.h"
 #include "lnfs_build.h"
 
-string lnfs_name()
+std::string lnfs_name()
 {
 	return LNFS_NAME;
 }

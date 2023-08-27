@@ -1,18 +1,6 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#include <iostream>
+// https://en.cppreference.com/w/cpp/utility/format/format
 
 #include "lnfs_log.h"
-
-void lnfs_debug(string msg)
-{
-#ifdef LNFS_DEBUG
-	cerr << "[D] " << msg << endl;
-#endif
-}
-
-void lnfs_log(string msg)
-{
-	cout << msg << endl;
-}

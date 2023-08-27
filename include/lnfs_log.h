@@ -1,15 +1,21 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#ifndef LNFS_LOG_H_
-#define LNFS_LOG_H_
+#pragma once
 
-#include <string>
+#include <format>
+#include <iostream>
 
-using namespace std;
+template<typename... Args>
+void lnfs_debug(const std::format_string<Args...> fmt, Args&&... args)
+{
+#ifdef LNFS_DEBUG
+	std::cerr << "[D] " << std::vformat(fmt.get(), std::make_format_args(args...)) << std::endl;
+#endif
+}
 
-void lnfs_debug(string);
-
-void lnfs_log(string);
-
-#endif // LNFS_LOG_H_
+template<typename... Args>
+void lnfs_log(const std::format_string<Args...> fmt, Args&&... args)
+{
+	std::cout << std::vformat(fmt.get(), std::make_format_args(args...)) << std::endl;
+}
