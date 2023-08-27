@@ -1,8 +1,8 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#include "lnfs.h"
-#include "lnfs_log.h"
+#include "lnfs.hpp"
+#include "lnfs_log.hpp"
 
 #include <sys/stat.h> // for umask
 

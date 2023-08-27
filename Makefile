@@ -11,7 +11,7 @@ BUILDD := $(SRCD)/$(BUILD_DIR)
 
 LNFS_LIB := $(BUILDD)/lib$(LNFS_NAME).a
 LNFS_LIB_DEPS := $(LNFS_LIB)
-LNFS_LIB_DEPS += $(SRCD)/include/lnfs_log.h $(SRCD)/lib/lnfs_log.cpp
+LNFS_LIB_DEPS += $(SRCD)/include/lnfs_log.hpp $(SRCD)/lib/lnfs_log.cpp
 
 CXX_EXTRA_FLAGS ?= -fdiagnostics-color=auto
 
@@ -46,7 +46,7 @@ debug:
 
 # lnfs_build.h
 
-$(BUILDD)/include/lnfs_build.h: Makefile $(SRCD)/include/lnfs.h
+$(BUILDD)/include/lnfs_build.h: Makefile $(SRCD)/include/lnfs.hpp
 	@mkdir -vp $(BUILDD)/include
 	@echo "#define LNFS_NAME \"$(LNFS_NAME)\"" >$(BUILDD)/include/lnfs_build.h
 
