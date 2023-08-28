@@ -141,7 +141,6 @@ int lnfs_mkdir(const char* path, mode_t mode)
 	return 0;
 }
 
-
 //------------------------------------------------------------------------------
 // man 2 unlink
 
@@ -159,6 +158,22 @@ int lnfs_unlink(const char* path)
 }
 
 //------------------------------------------------------------------------------
+// man 2 rmdir
+
+int lnfs_rmdir(const char* path)
+{
+	lnfs_debug("passthrough rmdir {}", path);
+	int res;
+	res = rmdir(path);
+	if (res == -1)
+	{
+		lnfs_error("passthrough rmdir {} {}", path, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -166,6 +181,7 @@ static const fuse_operations ops = {
 	.mknod    = lnfs_mknod,
 	.mkdir    = lnfs_mkdir,
 	.unlink   = lnfs_unlink,
+	.rmdir    = lnfs_rmdir,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
