@@ -54,4 +54,4 @@ int lnfs_utimens(const char* path, const struct timespec ts[2],
 		struct fuse_file_info* fi);
 #endif
 
-const fuse_operations* lnfs_operations();
+const struct fuse_operations* lnfs_operations();

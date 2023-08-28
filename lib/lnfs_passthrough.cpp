@@ -320,7 +320,7 @@ int lnfs_create(const char* path, mode_t mode, struct fuse_file_info* fi)
 
 //------------------------------------------------------------------------------
 
-static const fuse_operations ops = {
+static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
 	.readlink = lnfs_readlink,
 	.mknod    = lnfs_mknod,
@@ -342,7 +342,7 @@ static const fuse_operations ops = {
 #endif
 };
 
-const fuse_operations* lnfs_operations()
+const struct fuse_operations* lnfs_operations()
 {
 	lnfs_debug("passthrough operations");
 	return &ops;
