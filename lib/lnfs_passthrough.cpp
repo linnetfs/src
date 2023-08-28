@@ -174,6 +174,22 @@ int lnfs_rmdir(const char* path)
 }
 
 //------------------------------------------------------------------------------
+// man 2 symlink
+
+int lnfs_symlink(const char* target, const char* path)
+{
+	lnfs_debug("passthrough symlink {} -> {}", path, target);
+	int res;
+	res = symlink(target, path);
+	if (res == -1)
+	{
+		lnfs_error("passthrough symlink {} -> {} {}", path, target, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -182,6 +198,7 @@ static const fuse_operations ops = {
 	.mkdir    = lnfs_mkdir,
 	.unlink   = lnfs_unlink,
 	.rmdir    = lnfs_rmdir,
+	.symlink  = lnfs_symlink,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,

@@ -26,4 +26,6 @@ int lnfs_unlink(const char* path);
 
 int lnfs_rmdir(const char* path);
 
+int lnfs_symlink(const char* target, const char* path);
+
 const fuse_operations* lnfs_operations();
