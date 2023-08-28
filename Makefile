@@ -4,7 +4,7 @@
 LNFS_NAME ?= linnetfs
 LNFS_MODE ?= passthrough
 
-BUILD_DIR ?= build
+BUILD_DIR ?= build/$(LNFS_MODE)
 
 SRCD := $(PWD)
 BUILDD := $(SRCD)/$(BUILD_DIR)
@@ -47,14 +47,13 @@ docker:
 
 .PHONY: clean
 clean:
-	@rm -vrf ./build/*.* ./build/debug ./build/include
+	@rm -vrf ./build/*
 
 .PHONY: build
 build: $(LNFS_MOUNT)
 
 .PHONY: debug
 debug:
-	@mkdir -vp $(BUILDD)/debug
 	@$(MAKE) build BUILD_DIR=$(BUILD_DIR)/debug CXX_EXTRA_FLAGS='-O0 -ggdb -DLNFS_DEBUG'
 
 # lnfs_build.h
