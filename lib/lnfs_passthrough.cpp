@@ -190,6 +190,27 @@ int lnfs_symlink(const char* target, const char* path)
 }
 
 //------------------------------------------------------------------------------
+// man 2 rename
+
+int lnfs_rename(const char* oldpath, const char* newpath, unsigned int flags)
+{
+	lnfs_debug("passthrough rename {} -> {}", oldpath, newpath);
+	if (flags)
+	{
+		lnfs_error("passthrough rename {} -> {} invalid flags {}", oldpath, newpath, EINVAL);
+		return -EINVAL;
+	}
+	int res;
+	res = rename(oldpath, newpath);
+	if (res == -1)
+	{
+		lnfs_error("passthrough rename {} -> {} {}", oldpath, newpath, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -199,6 +220,7 @@ static const fuse_operations ops = {
 	.unlink   = lnfs_unlink,
 	.rmdir    = lnfs_rmdir,
 	.symlink  = lnfs_symlink,
+	.rename   = lnfs_rename,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
