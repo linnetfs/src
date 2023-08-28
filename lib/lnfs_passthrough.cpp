@@ -302,6 +302,23 @@ int lnfs_utimens(const char* path, const struct timespec ts[2],
 #endif
 
 //------------------------------------------------------------------------------
+// man 2 creat
+
+int lnfs_create(const char* path, mode_t mode, struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough create {} {}", path, mode);
+	int res;
+	res = open(path, fi->flags, mode);
+	if (res == -1)
+	{
+		lnfs_error("passthrough create {} {} {}", path, mode, errno);
+		return -errno;
+	}
+	fi->fh = res;
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -319,6 +336,7 @@ static const fuse_operations ops = {
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
+	.create   = lnfs_create,
 #ifdef HAVE_UTIMENSAT
 	.utimens  = lnfs_utimens,
 #endif
