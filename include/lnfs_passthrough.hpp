@@ -22,4 +22,6 @@ int lnfs_mknod(const char* path, mode_t mode, dev_t rdev);
 
 int lnfs_mkdir(const char* path, mode_t mode);
 
+int lnfs_unlink(const char* path);
+
 const fuse_operations* lnfs_operations();
