@@ -7,8 +7,10 @@
 
 #include "lnfs_fuse.hpp"
 
-void* lnfs_init(fuse_conn_info*, fuse_config*);
+void* lnfs_init(fuse_conn_info* conn, fuse_config* cfg);
 
 int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi);
+
+int lnfs_access(const char* path, int mask);
 
 const fuse_operations* lnfs_operations();

@@ -4,6 +4,7 @@
 #include "lnfs_passthrough.hpp"
 
 #include <cerrno>
+#include <unistd.h> // for: access
 
 #include "lnfs_log.hpp"
 
@@ -21,6 +22,7 @@ void* lnfs_init(fuse_conn_info* conn, fuse_config* cfg)
 }
 
 //------------------------------------------------------------------------------
+// man 2 lstat
 
 int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi)
 {
@@ -34,10 +36,24 @@ int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi)
 }
 
 //------------------------------------------------------------------------------
+// man 2 access
+
+int lnfs_access(const char* path, int mask)
+{
+	lnfs_debug("passthrough access {} {}", path, mask);
+	int res;
+	res = access(path, mask);
+	if (res == -1)
+		return -errno;
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr = lnfs_getattr,
 	.init    = lnfs_init,
+	.access  = lnfs_access,
 };
 
 const fuse_operations* lnfs_operations()
