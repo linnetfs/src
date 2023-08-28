@@ -10,7 +10,10 @@ SRCD := $(PWD)
 BUILDD := $(SRCD)/$(BUILD_DIR)
 
 LNFS_LIB := $(BUILDD)/lib$(LNFS_NAME).a
+
 LNFS_LIB_DEPS := $(LNFS_LIB)
+LNFS_LIB_DEPS += $(SRCD)/include/lnfs.hpp
+LNFS_LIB_DEPS += $(SRCD)/include/lnfs_fuse.hpp
 LNFS_LIB_DEPS += $(SRCD)/include/lnfs_log.hpp
 
 CXX_EXTRA_FLAGS ?= -fdiagnostics-color=auto
@@ -57,7 +60,7 @@ $(BUILDD)/lnfs_utils.o: $(BUILDD)/include/lnfs_build.h $(SRCD)/include/lnfs_util
 
 # lnfs_$(LNFS_MODE).o
 
-$(BUILDD)/lnfs_$(LNFS_MODE).o: $(SRCD)/include/lnfs_$(LNFS_MODE).hpp $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
+$(BUILDD)/lnfs_$(LNFS_MODE).o: $(SRCD)/include/*.hpp $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
 	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_$(LNFS_MODE).o -c $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
 
 # liblnfs.a

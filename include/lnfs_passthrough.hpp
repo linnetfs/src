@@ -9,4 +9,6 @@
 
 void* lnfs_init(fuse_conn_info*, fuse_config*);
 
-fuse_operations* lnfs_operations();
+int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi);
+
+const fuse_operations* lnfs_operations();

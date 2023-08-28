@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define FUSE_USE_VERSION 31
+#define FUSE_USE_VERSION 35
 
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
