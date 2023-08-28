@@ -20,4 +20,6 @@ int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 
 int lnfs_mknod(const char* path, mode_t mode, dev_t rdev);
 
+int lnfs_mkdir(const char* path, mode_t mode);
+
 const fuse_operations* lnfs_operations();

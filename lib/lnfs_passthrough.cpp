@@ -97,7 +97,6 @@ int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 	return 0;
 }
 
-
 //------------------------------------------------------------------------------
 // man 2 mknod
 
@@ -112,11 +111,25 @@ int lnfs_mknod(const char* path, mode_t mode, dev_t rdev)
 }
 
 //------------------------------------------------------------------------------
+// man 2 mkdir
+
+int lnfs_mkdir(const char* path, mode_t mode)
+{
+	lnfs_debug("passthrough mkdir {} {}", path, mode);
+	int res;
+	res = mkdir(path, mode);
+	if (res == -1)
+		return -errno;
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
 	.readlink = lnfs_readlink,
 	.mknod    = lnfs_mknod,
+	.mkdir    = lnfs_mkdir,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
