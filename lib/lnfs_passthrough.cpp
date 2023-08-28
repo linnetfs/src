@@ -211,6 +211,22 @@ int lnfs_rename(const char* oldpath, const char* newpath, unsigned int flags)
 }
 
 //------------------------------------------------------------------------------
+// man 2 link
+
+int lnfs_link(const char* target, const char* path)
+{
+	lnfs_debug("passthrough link {} -> {}", path, target);
+	int res;
+	res = link(target, path);
+	if (res == -1)
+	{
+		lnfs_error("passthrough link {} -> {} {}", path, target, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -221,6 +237,7 @@ static const fuse_operations ops = {
 	.rmdir    = lnfs_rmdir,
 	.symlink  = lnfs_symlink,
 	.rename   = lnfs_rename,
+	.link     = lnfs_link,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
