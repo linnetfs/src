@@ -4,6 +4,7 @@
 #include "lnfs_passthrough.hpp"
 
 #include <cerrno>
+
 #include <dirent.h> // for: readdir
 #include <string.h> // for: memset
 #include <unistd.h> // for: access
@@ -237,7 +238,24 @@ int lnfs_chmod(const char* path, mode_t mode, struct fuse_file_info* fi)
 	res = chmod(path, mode);
 	if (res == -1)
 	{
-		lnfs_debug("passthrough chmod {} {} {}", path, mode, errno);
+		lnfs_error("passthrough chmod {} {} {}", path, mode, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
+// man 2 lchown
+
+int lnfs_chown(const char* path, uid_t uid, gid_t gid, struct fuse_file_info* fi);
+{
+	lnfs_debug("passthrough chown {} {} {}", path, uid, gid);
+	(void) fi;
+	int res;
+	res = lchown(path, uid, gid);
+	if (res == -1)
+	{
+		lnfs_error("passthrough chown {} {} {} {}", path, uid, gid, errno);
 		return -errno;
 	}
 	return 0;
@@ -256,6 +274,7 @@ static const fuse_operations ops = {
 	.rename   = lnfs_rename,
 	.link     = lnfs_link,
 	.chmod    = lnfs_chmod,
+	.chown    = lnfs_chown,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,

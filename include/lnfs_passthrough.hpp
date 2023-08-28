@@ -34,4 +34,6 @@ int lnfs_link(const char* target, const char* path);
 
 int lnfs_chmod(const char* path, mode_t mode, struct fuse_file_info* fi);
 
+int lnfs_chown(const char* path, uid_t uid, gid_t gid, struct fuse_file_info* fi);
+
 const fuse_operations* lnfs_operations();
