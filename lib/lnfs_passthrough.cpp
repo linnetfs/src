@@ -24,7 +24,7 @@ void* lnfs_init(fuse_conn_info* conn, fuse_config* cfg)
 
 int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi)
 {
-	lnfs_debug("passthrough getattr: {}", path);
+	lnfs_debug("passthrough getattr {}", path);
 	(void) fi;
 	int res;
 	res = lstat(path, stbuf);

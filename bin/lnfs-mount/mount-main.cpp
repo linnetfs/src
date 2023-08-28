@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-	lnfs_debug("{}", lnfs_name());
+	lnfs_debug("{} {}", LNFS_NAME, LNFS_MODE);
 	umask(0);
 	return fuse_main(argc, argv, lnfs_operations(), NULL);
 }

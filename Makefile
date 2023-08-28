@@ -11,10 +11,20 @@ BUILDD := $(SRCD)/$(BUILD_DIR)
 
 LNFS_LIB := $(BUILDD)/lib$(LNFS_NAME).a
 
-LNFS_LIB_DEPS := $(LNFS_LIB)
-LNFS_LIB_DEPS += $(SRCD)/include/lnfs.hpp
-LNFS_LIB_DEPS += $(SRCD)/include/lnfs_fuse.hpp
-LNFS_LIB_DEPS += $(SRCD)/include/lnfs_log.hpp
+LNFS_LIB_OBJS := $(BUILDD)/lnfs_$(LNFS_MODE).o
+
+LNFS_BUILD_H := $(BUILDD)/include/lnfs_build.hpp
+LNFS_BUILD_H_DEPS := Makefile
+LNFS_BUILD_H_DEPS := $(SRCD)/include/lnfs.hpp
+
+LNFS_SRC_DEPS := $(LNFS_BUILD_H)
+LNFS_SRC_DEPS += $(SRCD)/include/lnfs.hpp
+LNFS_SRC_DEPS += $(SRCD)/include/lnfs_fuse.hpp
+LNFS_SRC_DEPS += $(SRCD)/include/lnfs_log.hpp
+
+LNFS_BIN_DEPS := $(LNFS_LIB) $(LNFS_SRC_DEPS)
+
+LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
 
 CXX_EXTRA_FLAGS ?= -fdiagnostics-color=auto
 
@@ -37,8 +47,6 @@ docker:
 clean:
 	@rm -vrf ./build/*.* ./build/debug ./build/include
 
-LNFS_MOUNT := $(BUILDD)/$(LNFS_NAME)-mount.bin
-
 .PHONY: build
 build: $(LNFS_MOUNT)
 
@@ -49,24 +57,18 @@ debug:
 
 # lnfs_build.h
 
-$(BUILDD)/include/lnfs_build.h: Makefile $(SRCD)/include/lnfs.hpp
+$(LNFS_BUILD_H): $(LNFS_BUILD_H_DEPS)
 	@mkdir -vp $(BUILDD)/include
-	@echo "#define LNFS_NAME \"$(LNFS_NAME)\"" >$(BUILDD)/include/lnfs_build.h
-
-# lnfs_utils.o
-
-$(BUILDD)/lnfs_utils.o: $(BUILDD)/include/lnfs_build.h $(SRCD)/include/lnfs_utils.hpp $(SRCD)/lib/lnfs_utils.cpp
-	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_utils.o -c $(SRCD)/lib/lnfs_utils.cpp
+	@echo '#pragma once'                        >$(LNFS_BUILD_H)
+	@echo "#define LNFS_NAME \"$(LNFS_NAME)\"" >>$(LNFS_BUILD_H)
+	@echo "#define LNFS_MODE \"$(LNFS_MODE)\"" >>$(LNFS_BUILD_H)
 
 # lnfs_$(LNFS_MODE).o
 
-$(BUILDD)/lnfs_$(LNFS_MODE).o: $(SRCD)/include/*.hpp $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
+$(BUILDD)/lnfs_$(LNFS_MODE).o: $(LNFS_SRC_DEPS) $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
 	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_$(LNFS_MODE).o -c $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
 
 # liblnfs.a
-
-LNFS_LIB_OBJS := $(BUILDD)/lnfs_utils.o
-LNFS_LIB_OBJS += $(BUILDD)/lnfs_$(LNFS_MODE).o
 
 $(LNFS_LIB): $(LNFS_LIB_OBJS)
 	@rm -vf $(LNFS_LIB)
@@ -77,5 +79,5 @@ liblinnetfs.a: $(LNFS_LIB)
 
 # lnfs-mount.bin
 
-$(LNFS_MOUNT): $(LNFS_LIB_DEPS) $(SRCD)/bin/lnfs-mount/mount-main.cpp
+$(LNFS_MOUNT): $(LNFS_BIN_DEPS) $(SRCD)/bin/lnfs-mount/mount-main.cpp
 	$(CXX) $(CXX_FLAGS) -o $(LNFS_MOUNT) $(SRCD)/bin/lnfs-mount/mount-main.cpp $(LNFS_LIB) $(CXX_LIBS)
