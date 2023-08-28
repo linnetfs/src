@@ -319,6 +319,23 @@ int lnfs_create(const char* path, mode_t mode, struct fuse_file_info* fi)
 }
 
 //------------------------------------------------------------------------------
+// man 2 open
+
+int lnfs_open(const char* path, struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough open {}", path);
+	int res;
+	res = open(path, fi->flags);
+	if (res == -1)
+	{
+		lnfs_error("passthrough open {} {}", path, errno);
+		return -errno;
+	}
+	fi->fh = res;
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -333,6 +350,7 @@ static const struct fuse_operations ops = {
 	.chmod    = lnfs_chmod,
 	.chown    = lnfs_chown,
 	.truncate = lnfs_truncate,
+	.open     = lnfs_open,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
