@@ -50,10 +50,24 @@ int lnfs_access(const char* path, int mask)
 
 //------------------------------------------------------------------------------
 
+int lnfs_readlink(const char* path, char* buf, size_t size)
+{
+	lnfs_debug("passthrough readlink {}", path);
+	int res;
+	res = readlink(path, buf, size - 1);
+	if (res == -1)
+		return -errno;
+	buf[res] = '\0';
+	return 0;
+}
+
+//------------------------------------------------------------------------------
+
 static const fuse_operations ops = {
-	.getattr = lnfs_getattr,
-	.init    = lnfs_init,
-	.access  = lnfs_access,
+	.getattr  = lnfs_getattr,
+	.readlink = lnfs_readlink,
+	.init     = lnfs_init,
+	.access   = lnfs_access,
 };
 
 const fuse_operations* lnfs_operations()

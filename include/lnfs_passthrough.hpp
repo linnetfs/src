@@ -13,4 +13,6 @@ int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi);
 
 int lnfs_access(const char* path, int mask);
 
+int lnfs_readlink(const char* path, char* buf, size_t size);
+
 const fuse_operations* lnfs_operations();
