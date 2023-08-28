@@ -32,4 +32,6 @@ int lnfs_rename(const char* oldpath, const char* newpath, unsigned int flags);
 
 int lnfs_link(const char* target, const char* path);
 
+int lnfs_chmod(const char* path, mode_t mode, struct fuse_file_info* fi);
+
 const fuse_operations* lnfs_operations();

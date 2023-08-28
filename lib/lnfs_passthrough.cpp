@@ -227,6 +227,23 @@ int lnfs_link(const char* target, const char* path)
 }
 
 //------------------------------------------------------------------------------
+// man 2 chmod
+
+int lnfs_chmod(const char* path, mode_t mode, struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough chmod {} {}", path, mode);
+	(void) fi;
+	int res;
+	res = chmod(path, mode);
+	if (res == -1)
+	{
+		lnfs_debug("passthrough chmod {} {} {}", path, mode, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -238,6 +255,7 @@ static const fuse_operations ops = {
 	.symlink  = lnfs_symlink,
 	.rename   = lnfs_rename,
 	.link     = lnfs_link,
+	.chmod    = lnfs_chmod,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
