@@ -247,7 +247,7 @@ int lnfs_chmod(const char* path, mode_t mode, struct fuse_file_info* fi)
 //------------------------------------------------------------------------------
 // man 2 lchown
 
-int lnfs_chown(const char* path, uid_t uid, gid_t gid, struct fuse_file_info* fi);
+int lnfs_chown(const char* path, uid_t uid, gid_t gid, struct fuse_file_info* fi)
 {
 	lnfs_debug("passthrough chown {} {} {}", path, uid, gid);
 	(void) fi;
@@ -256,6 +256,26 @@ int lnfs_chown(const char* path, uid_t uid, gid_t gid, struct fuse_file_info* fi
 	if (res == -1)
 	{
 		lnfs_error("passthrough chown {} {} {} {}", path, uid, gid, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
+// man 2 truncate
+
+int lnfs_truncate(const char* path, off_t size, struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough truncate {} {}", path, size);
+	(void) fi;
+	int res;
+	if (fi != NULL)
+		res = ftruncate(fi->fh, size);
+	else
+		res = truncate(path, size);
+	if (res == -1)
+	{
+		lnfs_error("passthrough truncate {} {} {}", path, size, errno);
 		return -errno;
 	}
 	return 0;
@@ -275,6 +295,7 @@ static const fuse_operations ops = {
 	.link     = lnfs_link,
 	.chmod    = lnfs_chmod,
 	.chown    = lnfs_chown,
+	.truncate = lnfs_truncate,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
