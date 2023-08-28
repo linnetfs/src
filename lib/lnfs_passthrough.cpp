@@ -33,7 +33,10 @@ int lnfs_getattr(const char* path, struct stat* stbuf, struct fuse_file_info* fi
 	int res;
 	res = lstat(path, stbuf);
 	if (res == -1)
+	{
+		lnfs_error("passthrough getattr {} {}", path, errno);
 		return -errno;
+	}
 	return 0;
 }
 
@@ -46,7 +49,10 @@ int lnfs_access(const char* path, int mask)
 	int res;
 	res = access(path, mask);
 	if (res == -1)
+	{
+		lnfs_error("passthrough access {} {} {}", path, mask, errno);
 		return -errno;
+	}
 	return 0;
 }
 
@@ -59,7 +65,10 @@ int lnfs_readlink(const char* path, char* buf, size_t size)
 	int res;
 	res = readlink(path, buf, size - 1);
 	if (res == -1)
+	{
+		lnfs_error("passthrough readlink {} {}", path, errno);
 		return -errno;
+	}
 	buf[res] = '\0';
 	return 0;
 }
@@ -81,7 +90,10 @@ int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 
 	dp = opendir(path);
 	if (dp == NULL)
+	{
+		lnfs_error("passthrough readdir {} opendir {}", path, errno);
 		return -errno;
+	}
 
 	while ((de = readdir(dp)) != NULL)
 	{
@@ -106,7 +118,10 @@ int lnfs_mknod(const char* path, mode_t mode, dev_t rdev)
 	int res;
 	res = mknod(path, mode, rdev);
 	if (res == -1)
+	{
+		lnfs_error("passthrough mknod {} {} {}", path, mode, errno);
 		return -errno;
+	}
 	return 0;
 }
 
@@ -119,7 +134,10 @@ int lnfs_mkdir(const char* path, mode_t mode)
 	int res;
 	res = mkdir(path, mode);
 	if (res == -1)
+	{
+		lnfs_error("passthrough mkdir {} {} {}", path, mode, errno);
 		return -errno;
+	}
 	return 0;
 }
 
@@ -133,7 +151,10 @@ int lnfs_unlink(const char* path)
 	int res;
 	res = unlink(path);
 	if (res == -1)
+	{
+		lnfs_error("passthrough unlink {} {}", path, errno);
 		return -errno;
+	}
 	return 0;
 }
 
