@@ -282,6 +282,26 @@ int lnfs_truncate(const char* path, off_t size, struct fuse_file_info* fi)
 }
 
 //------------------------------------------------------------------------------
+// man 2 utimensat
+
+#ifdef HAVE_UTIMENSAT
+int lnfs_utimens(const char* path, const struct timespec ts[2],
+		struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough utimens {}", path);
+	(void) fi;
+	int res;
+	res = utimensat(0, path, ts, AT_SYMLINK_NOFOLLOW);
+	if (res == -1)
+	{
+		lnfs_error("passthrough utimens {} {}", path, errno);
+		return -errno;
+	}
+	return 0;
+}
+#endif
+
+//------------------------------------------------------------------------------
 
 static const fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -299,6 +319,9 @@ static const fuse_operations ops = {
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
+#ifdef HAVE_UTIMENSAT
+	.utimens  = lnfs_utimens,
+#endif
 };
 
 const fuse_operations* lnfs_operations()
