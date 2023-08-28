@@ -7,12 +7,15 @@
 
 #include "lnfs_fuse.hpp"
 
-void* lnfs_init(fuse_conn_info* conn, fuse_config* cfg);
+void* lnfs_init(struct fuse_conn_info* conn, struct fuse_config* cfg);
 
-int lnfs_getattr(const char* path, struct stat* stbuf, fuse_file_info* fi);
+int lnfs_getattr(const char* path, struct stat* stbuf, struct fuse_file_info* fi);
 
 int lnfs_access(const char* path, int mask);
 
 int lnfs_readlink(const char* path, char* buf, size_t size);
+
+int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
+		off_t offset, struct fuse_file_info* fi, enum fuse_readdir_flags flags);
 
 const fuse_operations* lnfs_operations();
