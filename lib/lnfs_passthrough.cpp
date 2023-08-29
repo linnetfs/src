@@ -336,6 +336,35 @@ int lnfs_open(const char* path, struct fuse_file_info* fi)
 }
 
 //------------------------------------------------------------------------------
+// man 2 pread
+
+int lnfs_read(const char* path, char* buf, size_t size, off_t offset,
+		struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough read {}", path);
+	int fd;
+	int res;
+	if (fi == NULL)
+		fd = open(path, O_RDONLY);
+	else
+		fd = fi->fh;
+	if (fd == -1)
+	{
+		lnfs_error("passthrough read {} open {}", path, errno);
+		return -errno;
+	}
+	res = pread(fd, buf, size, offset);
+	if (res == -1)
+	{
+		lnfs_error("passthrough read {} {}", path, errno);
+		res = -errno;
+	}
+	if (fi == NULL)
+		close(fd);
+	return res;
+}
+
+//------------------------------------------------------------------------------
 
 static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -351,6 +380,7 @@ static const struct fuse_operations ops = {
 	.chown    = lnfs_chown,
 	.truncate = lnfs_truncate,
 	.open     = lnfs_open,
+	.read     = lnfs_read,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
