@@ -56,6 +56,16 @@ build: $(LNFS_MOUNT)
 debug:
 	@$(MAKE) build BUILD_DIR=$(BUILD_DIR)/debug CXX_EXTRA_FLAGS='-O0 -ggdb -DLNFS_DEBUG'
 
+.PHONY: debug-all
+debug-all:
+	@$(MAKE) debug LNFS_MODE=passthrough
+	@$(MAKE) debug LNFS_MODE=memory
+
+.PHONY: all
+all:
+	@$(MAKE) build LNFS_MODE=passthrough
+	@$(MAKE) build LNFS_MODE=memory
+
 # lnfs_build.h
 
 $(LNFS_BUILD_H): $(LNFS_BUILD_H_DEPS)
