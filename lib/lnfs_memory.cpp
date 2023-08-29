@@ -4,7 +4,27 @@
 #include "lnfs_memory.hpp"
 #include "lnfs_log.hpp"
 
-//------------------------------------------------------------------------------
+/******************************************************************************/
+// File
+
+File::File(string p)
+{
+	path = p;
+}
+
+/******************************************************************************/
+// LNFS
+
+LNFS::LNFS()
+{
+	File root("/");
+	files[0] = &root;
+	next = 1;
+}
+
+LNFS fs;
+
+/******************************************************************************/
 // init
 
 void* lnfs_init(struct fuse_conn_info* conn, struct fuse_config* cfg)
@@ -18,7 +38,7 @@ void* lnfs_init(struct fuse_conn_info* conn, struct fuse_config* cfg)
 	return nullptr;
 }
 
-//------------------------------------------------------------------------------
+/******************************************************************************/
 // operations
 
 static const struct fuse_operations ops = {

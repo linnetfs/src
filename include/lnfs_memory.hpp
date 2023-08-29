@@ -8,6 +8,27 @@
 
 #include "lnfs_fuse.hpp"
 
+#include <string>
+
+using namespace std;
+
+class File {
+	public:
+		File(string p);
+
+	private:
+		string path;
+};
+
+class LNFS {
+	public:
+		LNFS();
+
+	private:
+		int next;
+		File* files[1000];
+};
+
 const struct fuse_operations* lnfs_operations();
 
 void* lnfs_init(struct fuse_conn_info* conn, struct fuse_config* cfg);
