@@ -57,6 +57,8 @@ int lnfs_write(const char* path, const char* buf, size_t size, off_t offset,
 
 int lnfs_statfs(const char* path, struct statvfs* stbuf);
 
+int lnfs_release(const char* path, struct fuse_file_info* fi);
+
 int lnfs_create(const char* path, mode_t mode, struct fuse_file_info* fi);
 
 #ifdef HAVE_UTIMENSAT

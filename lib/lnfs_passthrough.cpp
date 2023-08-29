@@ -410,6 +410,17 @@ int lnfs_statfs(const char* path, struct statvfs* stbuf)
 }
 
 //------------------------------------------------------------------------------
+// man 2 close
+
+int lnfs_release(const char* path, struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough release {}", path);
+	(void) path;
+	close(fi->fh);
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -428,6 +439,7 @@ static const struct fuse_operations ops = {
 	.read     = lnfs_read,
 	.write    = lnfs_write,
 	.statfs   = lnfs_statfs,
+	.release  = lnfs_release,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
