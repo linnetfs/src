@@ -76,7 +76,11 @@ $(LNFS_BUILD_H): $(LNFS_BUILD_H_DEPS)
 
 # lnfs_$(LNFS_MODE).o
 
-$(BUILDD)/lnfs_$(LNFS_MODE).o: $(LNFS_SRC_DEPS) $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
+LNFS_MODE_DEPS := $(LNFS_SRC_DEPS)
+LNFS_MODE_DEPS += $(SRCD)/include/lnfs_$(LNFS_MODE).hpp
+LNFS_MODE_DEPS += $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
+
+$(BUILDD)/lnfs_$(LNFS_MODE).o: $(LNFS_MODE_DEPS)
 	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_$(LNFS_MODE).o -c $(SRCD)/lib/lnfs_$(LNFS_MODE).cpp
 
 # liblnfs.a
