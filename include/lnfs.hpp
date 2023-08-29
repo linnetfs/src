@@ -9,3 +9,7 @@
 #ifdef LNFS_MODE_passthrough
 #include "lnfs_passthrough.hpp"
 #endif
+
+#ifdef LNFS_MODE_memory
+#include "lnfs_memory.hpp"
+#endif
