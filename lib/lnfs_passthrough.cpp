@@ -394,6 +394,22 @@ int lnfs_write(const char* path, const char* buf, size_t size, off_t offset,
 }
 
 //------------------------------------------------------------------------------
+// man 2 statvfs
+
+int lnfs_statfs(const char* path, struct statvfs* stbuf)
+{
+	lnfs_debug("passthrough statfs {}", path);
+	int res;
+	res = statvfs(path, stbuf);
+	if (res == -1)
+	{
+		lnfs_error("passthrough statfs {} {}", path, errno);
+		return -errno;
+	}
+	return 0;
+}
+
+//------------------------------------------------------------------------------
 
 static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -411,6 +427,7 @@ static const struct fuse_operations ops = {
 	.open     = lnfs_open,
 	.read     = lnfs_read,
 	.write    = lnfs_write,
+	.statfs   = lnfs_statfs,
 	.readdir  = lnfs_readdir,
 	.init     = lnfs_init,
 	.access   = lnfs_access,
