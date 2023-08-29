@@ -421,6 +421,35 @@ int lnfs_release(const char* path, struct fuse_file_info* fi)
 }
 
 //------------------------------------------------------------------------------
+// man 2 lseek
+
+off_t lnfs_lseek(const char* path, off_t off, int whence,
+		struct fuse_file_info* fi)
+{
+	lnfs_debug("passthrough lseek {}", path);
+	int fd;
+	off_t res;
+	if (fi == NULL)
+		fd = open(path, O_RDONLY);
+	else
+		fd = fi->fh;
+	if (fd == -1)
+	{
+		lnfs_error("passthrough lseek {} open {}", path, -errno);
+		return -errno;
+	}
+	res = lseek(fd, off, whence);
+	if (res == -1)
+	{
+		lnfs_error("passthrough lseek {} {}", path, -errno);
+		res = -errno;
+	}
+	if (fi == NULL)
+		close(fd);
+	return res;
+}
+
+//------------------------------------------------------------------------------
 
 static const struct fuse_operations ops = {
 	.getattr  = lnfs_getattr,
@@ -447,6 +476,7 @@ static const struct fuse_operations ops = {
 #ifdef HAVE_UTIMENSAT
 	.utimens  = lnfs_utimens,
 #endif
+	.lseek    = lnfs_lseek,
 };
 
 const struct fuse_operations* lnfs_operations()
