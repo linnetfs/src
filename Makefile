@@ -12,6 +12,7 @@ BUILDD := $(SRCD)/$(BUILD_DIR)
 LNFS_LIB := $(BUILDD)/lib$(LNFS_NAME).a
 
 LNFS_LIB_OBJS := $(BUILDD)/lnfs_$(LNFS_MODE).o
+LNFS_LIB_OBJS += $(BUILDD)/lnfs_file.o
 
 LNFS_BUILD_H := $(BUILDD)/include/lnfs_build.hpp
 
@@ -73,6 +74,15 @@ $(LNFS_BUILD_H): $(LNFS_BUILD_H_DEPS)
 	@echo '#pragma once'                        >$(LNFS_BUILD_H)
 	@echo "#define LNFS_NAME \"$(LNFS_NAME)\"" >>$(LNFS_BUILD_H)
 	@echo "#define LNFS_MODE \"$(LNFS_MODE)\"" >>$(LNFS_BUILD_H)
+
+# lnfs_file.o
+
+LNFS_FILE_DEPS := $(LNFS_SRC_DEPS)
+LNFS_FILE_DEPS += $(SRCD)/include/lnfs_file.hpp
+LNFS_FILE_DEPS += $(SRCD)/lib/lnfs_file.cpp
+
+$(BUILDD)/lnfs_file.o: $(LNFS_FILE_DEPS)
+	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_file.o -c $(SRCD)/lib/lnfs_file.cpp
 
 # lnfs_$(LNFS_MODE).o
 
