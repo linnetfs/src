@@ -5,7 +5,7 @@
 #include "lnfs_log.hpp"
 
 /******************************************************************************/
-// File
+// getattr
 
 int File::getattr(struct stat* stbuf)
 {
@@ -21,6 +21,9 @@ int File::getattr(struct stat* stbuf)
 	return 0;
 }
 
+/******************************************************************************/
+// access
+
 int File::access(int mask)
 {
 	lnfs_debug("file access {} {} {}", name(), ACCESSPERMS, mask);
@@ -33,16 +36,25 @@ int File::access(int mask)
 	return 0;
 }
 
+/******************************************************************************/
+// dirent
+
 void File::dirent()
 {
 	dir = true;
 	mode = 0755;
 }
 
+/******************************************************************************/
+// is_dir
+
 bool File::is_dir()
 {
 	return dir;
 }
+
+/******************************************************************************/
+// is_path
 
 bool File::is_path(string p)
 {
@@ -50,20 +62,32 @@ bool File::is_path(string p)
 	return path == p;
 }
 
+/******************************************************************************/
+// not_found
+
 void File::not_found()
 {
 	found = false;
 }
+
+/******************************************************************************/
+// is_not_found
 
 bool File::is_not_found()
 {
 	return !found;
 }
 
+/******************************************************************************/
+// name
+
 string File::name()
 {
 	return path;
 }
+
+/******************************************************************************/
+// init
 
 void File::init(string p)
 {
@@ -79,6 +103,9 @@ void File::init(string p)
 	found = true;
 }
 
+/******************************************************************************/
+// File
+
 File::File()
 {
 	init("/");
@@ -87,33 +114,4 @@ File::File()
 File::File(string p)
 {
 	init(p);
-}
-
-/******************************************************************************/
-// LNFS
-
-File LNFS::lookup(string p)
-{
-	lnfs_debug("lnfs lookup {}, count: {}", p, count);
-	for (int idx = 0; idx < count; idx++)
-	{
-		File f = files[idx];
-		lnfs_debug("lnfs lookup check path {}", f.name());
-		if (f.is_path(p))
-			return f;
-	}
-	lnfs_debug("lnfs lookup {}: no such file or directory", p);
-	File f(p);
-	f.not_found();
-	return f;
-}
-
-LNFS::LNFS(string n)
-{
-	name = n;
-	File root("/");
-	root.dirent();
-	files[0] = root;
-	count = 1;
-	next = 1;
 }

@@ -9,9 +9,6 @@
 
 using namespace std;
 
-/******************************************************************************/
-// File
-
 class File {
 	public:
 		int mode;
@@ -42,19 +39,4 @@ class File {
 		bool dir;
 		void init(string p);
 		bool found;
-};
-
-/******************************************************************************/
-// LNFS
-
-class LNFS {
-	public:
-		File lookup(string p);
-		LNFS(string n);
-
-	private:
-		string name;
-		int count;
-		int next;
-		File files[1000];
 };
