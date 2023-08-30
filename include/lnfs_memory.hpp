@@ -28,13 +28,14 @@ class File {
 		time_t atime;
 		time_t mtime;
 		time_t ctime;
-		bool not_found;
 
 		int getattr(struct stat* stbuf);
 
 		void dirent();
 		bool is_dir();
 		bool is_path(string path);
+		void not_found();
+		bool is_not_found();
 		string name();
 
 		File();
@@ -44,20 +45,20 @@ class File {
 		string path;
 		bool dir;
 		void init(string p);
+		bool found;
 };
-
-File lnfs_dir(string path);
 
 /******************************************************************************/
 // LNFS
 
 class LNFS {
 	public:
-		File get(string p);
+		File lookup(string p);
 		LNFS(string n);
 
 	private:
 		string name;
+		int count;
 		int next;
 		File files[1000];
 };

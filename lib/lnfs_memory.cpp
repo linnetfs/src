@@ -37,6 +37,16 @@ bool File::is_path(string p)
 	return path == p;
 }
 
+void File::not_found()
+{
+	found = false;
+}
+
+bool File::is_not_found()
+{
+	return !found;
+}
+
 string File::name()
 {
 	return path;
@@ -53,7 +63,7 @@ void File::init(string p)
 	size = 0;
 	blocks = 0;
 	atime = mtime = ctime = time(NULL);
-	not_found = false;
+	found = true;
 }
 
 File::File()
@@ -66,28 +76,22 @@ File::File(string p)
 	init(p);
 }
 
-File lnfs_dir(string path)
-{
-	File f(path);
-	f.dirent();
-	return f;
-}
-
 /******************************************************************************/
 // LNFS
 
-File LNFS::get(string p)
+File LNFS::lookup(string p)
 {
-	lnfs_debug("lnfs get {}", p);
-	for (File f : files)
+	lnfs_debug("lnfs lookup {}, count: {}", p, count);
+	for (int idx = 0; idx < count; idx++)
 	{
-		lnfs_debug("f.path {}", f.name());
+		File f = files[idx];
+		lnfs_debug("lnfs lookup check path {}", f.name());
 		if (f.is_path(p))
 			return f;
 	}
-	lnfs_debug("{}: lnfs file or directory not found", p);
+	lnfs_debug("lnfs lookup {}: no such file or directory", p);
 	File f(p);
-	f.not_found = true;
+	f.not_found();
 	return f;
 }
 
@@ -97,6 +101,7 @@ LNFS::LNFS(string n)
 	File root("/");
 	root.dirent();
 	files[0] = root;
+	count = 1;
 	next = 1;
 }
 
@@ -122,11 +127,11 @@ void* lnfs_init(struct fuse_conn_info* conn, struct fuse_config* cfg)
 int lnfs_getattr(const char* path, struct stat* stbuf, struct fuse_file_info* fi)
 {
 	lnfs_debug("memory getattr {}", path);
-	File f = fs.get(path);
-	if (f.not_found)
+	File f = fs.lookup(path);
+	if (f.is_not_found())
 	{
 		int rc = -ENOENT;
-		lnfs_error("memory getattr {} {}", path, rc);
+		lnfs_error("memory getattr {} {}", f.name(), rc);
 		return rc;
 	}
 	return f.getattr(stbuf);
