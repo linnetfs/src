@@ -12,13 +12,23 @@
 
 using namespace std;
 
+/******************************************************************************/
+// File
+
 class File {
 	public:
+		void dirent();
 		File(string p);
 
 	private:
 		string path;
+		bool dir;
 };
+
+File lnfs_dir(string path);
+
+/******************************************************************************/
+// LNFS
 
 class LNFS {
 	public:
@@ -28,6 +38,9 @@ class LNFS {
 		int next;
 		File* files[1000];
 };
+
+/******************************************************************************/
+// fuse
 
 const struct fuse_operations* lnfs_operations();
 

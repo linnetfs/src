@@ -7,9 +7,22 @@
 /******************************************************************************/
 // File
 
+void File::dirent()
+{
+	dir = true;
+}
+
 File::File(string p)
 {
 	path = p;
+	dir  = false;
+}
+
+File lnfs_dir(string path)
+{
+	File f(path);
+	f.dirent();
+	return f;
 }
 
 /******************************************************************************/
@@ -17,12 +30,12 @@ File::File(string p)
 
 LNFS::LNFS()
 {
-	File root("/");
+	File root = lnfs_dir("/");
 	files[0] = &root;
 	next = 1;
 }
 
-LNFS fs;
+static const LNFS fs;
 
 /******************************************************************************/
 // init
