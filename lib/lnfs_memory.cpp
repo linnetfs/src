@@ -12,6 +12,11 @@ void File::dirent()
 	dir = true;
 }
 
+bool File::is_dir()
+{
+	return dir;
+}
+
 File::File(string p)
 {
 	path = p;

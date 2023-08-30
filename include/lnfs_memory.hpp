@@ -18,6 +18,7 @@ using namespace std;
 class File {
 	public:
 		void dirent();
+		bool is_dir();
 		File(string p);
 
 	private:
