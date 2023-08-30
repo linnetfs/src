@@ -42,11 +42,28 @@ int lnfs_getattr(const char* path, struct stat* stbuf, struct fuse_file_info* fi
 }
 
 /******************************************************************************/
+// access
+
+int lnfs_access(const char* path, int mask)
+{
+	lnfs_debug("memory access {} {}", path, mask);
+	File f = fs.lookup(path);
+	if (f.is_not_found())
+	{
+		int rc = -ENOENT;
+		lnfs_error("memory access {} {}", f.name(), rc);
+		return rc;
+	}
+	return f.access(mask);
+}
+
+/******************************************************************************/
 // operations
 
 static const struct fuse_operations ops = {
 	.getattr = lnfs_getattr,
 	.init    = lnfs_init,
+	.access  = lnfs_access,
 };
 
 const struct fuse_operations* lnfs_operations()

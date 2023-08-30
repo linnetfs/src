@@ -21,6 +21,18 @@ int File::getattr(struct stat* stbuf)
 	return 0;
 }
 
+int File::access(int mask)
+{
+	lnfs_debug("file access {} {} {}", name(), ACCESSPERMS, mask);
+	if ((mask & ~ACCESSPERMS) != 0)
+	{
+		int rc = -EACCES;
+		lnfs_error("file access {} {} {} {}", name(), ACCESSPERMS, mask, rc);
+		return rc;
+	}
+	return 0;
+}
+
 void File::dirent()
 {
 	dir = true;
@@ -34,6 +46,7 @@ bool File::is_dir()
 
 bool File::is_path(string p)
 {
+	lnfs_debug("{} is_path: {}", path, p);
 	return path == p;
 }
 

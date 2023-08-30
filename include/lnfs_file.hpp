@@ -25,6 +25,7 @@ class File {
 		time_t ctime;
 
 		int getattr(struct stat* stbuf);
+		int access(int mask);
 
 		void dirent();
 		bool is_dir();
