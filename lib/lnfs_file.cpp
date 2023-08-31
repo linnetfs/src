@@ -12,7 +12,7 @@
 
 int File::getattr(struct stat* stbuf)
 {
-	lnfs_debug("file getattr {}", name());
+	lnfs_debug("lnfs_file getattr {}", name());
 	stbuf->st_mode = mode;
 	stbuf->st_nlink = nlink;
 	stbuf->st_uid = uid;
@@ -22,7 +22,7 @@ int File::getattr(struct stat* stbuf)
 	stbuf->st_atime = atime;
 	stbuf->st_mtime = mtime;
 	stbuf->st_ctime = ctime;
-	lnfs_debug("file getattr {} mode={} nlink={} uid={} gid={} size={} blocks={} atime={} mtime={} ctime={}",
+	lnfs_debug("lnfs_file getattr {} mode={} nlink={} uid={} gid={} size={} blocks={} atime={} mtime={} ctime={}",
 		name(), stbuf->st_mode, stbuf->st_nlink, stbuf->st_uid, stbuf->st_gid,
 		stbuf->st_size, stbuf->st_blocks, stbuf->st_atime, stbuf->st_mtime,
 		stbuf->st_ctime);
@@ -36,11 +36,11 @@ int File::access(int mask)
 {
 	// Stolen from gnu/glibc/io/access.c
 	int perms = R_OK | W_OK | X_OK | F_OK;
-	lnfs_debug("file access {} {} {}", name(), perms, mask);
+	lnfs_debug("lnfs_file access {} {} {}", name(), perms, mask);
 	if ((mask & ~perms) != 0)
 	{
 		int rc = -EACCES;
-		lnfs_error("file access {} {} {} {}", name(), perms, mask, rc);
+		lnfs_error("lnfs_file access {} {} {} {}", name(), perms, mask, rc);
 		return rc;
 	}
 	return 0;
@@ -70,7 +70,6 @@ bool File::is_dir()
 
 bool File::is_path(string p)
 {
-	lnfs_debug("{} is_path: {}", path, p);
 	return path == p;
 }
 

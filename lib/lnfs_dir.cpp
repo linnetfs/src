@@ -10,15 +10,15 @@
 
 File Dir::lookup(string p)
 {
-	lnfs_debug("dir lookup {}, count: {}", p, count);
+	lnfs_debug("lnfs_dir lookup {}, count: {}", p, count);
 	for (int idx = 0; idx < count; idx++)
 	{
 		File f = files[idx];
-		lnfs_debug("dir lookup check path {}", f.name());
+		lnfs_debug("lnfs_dir lookup check path {}", f.name());
 		if (f.is_path(p))
 			return f;
 	}
-	lnfs_debug("dir lookup {}: no such file or directory", p);
+	lnfs_debug("lnfs_dir lookup {}: no such file or directory", p);
 	File f(p);
 	f.not_found();
 	return f;
