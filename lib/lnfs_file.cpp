@@ -4,6 +4,8 @@
 #include "lnfs_file.hpp"
 #include "lnfs_log.hpp"
 
+#include <unistd.h> // for: R_OK and friends
+
 /******************************************************************************/
 // getattr
 
@@ -27,7 +29,8 @@ int File::getattr(struct stat* stbuf)
 int File::access(int mask)
 {
 	lnfs_debug("file access {} {} {}", name(), ACCESSPERMS, mask);
-	if ((mask & ~ACCESSPERMS) != 0)
+	// Stolen from gnu/glibc/io/access.c
+	if ((mask & ~(R_OK|W_OK|X_OK|F_OK)) != 0)
 	{
 		int rc = -EACCES;
 		lnfs_error("file access {} {} {} {}", name(), ACCESSPERMS, mask, rc);
