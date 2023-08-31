@@ -7,6 +7,8 @@
 #include "lnfs_log.hpp"
 #include "lnfs_memfs.hpp"
 
+#include <cstring>
+
 /******************************************************************************/
 // fs
 
@@ -88,12 +90,19 @@ int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 	}
 
 	int rc;
-	rc = filler(buf, f.name().c_str(), NULL, 0, (fuse_fill_dir_flags) 0);
-	if (rc != 0)
-	{
-		int rc = -ENOMEM;
-		lnfs_error("memory readdir {} {}", f.name(), rc);
-		return rc;
+	const char* entries[3];
+	entries[0] = f.name().c_str();
+	entries[1] = ".";
+	entries[2] = "..";
+	for (int i = 0; i < 3; i++) {
+		const char* n = entries[i];
+		rc = filler(buf, n, NULL, 0, (fuse_fill_dir_flags) 0);
+		if (rc != 0)
+		{
+			int rc = -ENOMEM;
+			lnfs_error("memory readdir {} {}", n, rc);
+			return rc;
+		}
 	}
 
 	return 0;
