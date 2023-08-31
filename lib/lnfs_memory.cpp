@@ -61,7 +61,7 @@ int lnfs_access(const char* path, int mask)
 /******************************************************************************/
 // readdir
 //   man 3 opendir
-//   man 3 readdir
+//   man 2 readdir
 
 int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 		off_t offset, struct fuse_file_info* fi, enum fuse_readdir_flags flags)
@@ -100,13 +100,23 @@ int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 }
 
 /******************************************************************************/
+// readlink
+//   man 2 readlink
+
+int lnfs_readlink(const char* path, char* buf, size_t size)
+{
+	return 0;
+}
+
+/******************************************************************************/
 // operations
 
 static const struct fuse_operations ops = {
-	.getattr = lnfs_getattr,
-	.readdir = lnfs_readdir,
-	.init    = lnfs_init,
-	.access  = lnfs_access,
+	.getattr  = lnfs_getattr,
+	//~ .readlink = lnfs_readlink,
+	.readdir  = lnfs_readdir,
+	.init     = lnfs_init,
+	.access   = lnfs_access,
 };
 
 const struct fuse_operations* lnfs_operations()

@@ -15,6 +15,5 @@ class LNFSMem {
 	private:
 		string name;
 		int count;
-		int next;
 		File files[1000];
 };

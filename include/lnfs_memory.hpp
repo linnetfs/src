@@ -19,4 +19,4 @@ int lnfs_access(const char* path, int mask);
 int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
 		off_t offset, struct fuse_file_info* fi, enum fuse_readdir_flags flags);
 
-//~ int lnfs_readlink(const char* path, char* buf, size_t size);
+int lnfs_readlink(const char* path, char* buf, size_t size);

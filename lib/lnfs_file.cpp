@@ -11,6 +11,7 @@
 
 int File::getattr(struct stat* stbuf)
 {
+	lnfs_debug("file getattr {}", name());
 	stbuf->st_mode = mode;
 	stbuf->st_nlink = nlink;
 	stbuf->st_uid = uid;
@@ -20,6 +21,10 @@ int File::getattr(struct stat* stbuf)
 	stbuf->st_atime = atime;
 	stbuf->st_mtime = mtime;
 	stbuf->st_ctime = ctime;
+	lnfs_debug("file getattr {} mode={} nlink={} uid={} gid={} size={} blocks={} atime={} mtime={} ctime={}",
+		name(), stbuf->st_mode, stbuf->st_nlink, stbuf->st_uid, stbuf->st_gid,
+		stbuf->st_size, stbuf->st_blocks, stbuf->st_atime, stbuf->st_mtime,
+		stbuf->st_ctime);
 	return 0;
 }
 

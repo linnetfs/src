@@ -31,7 +31,6 @@ LNFSMem::LNFSMem(string n)
 	name = n;
 	File root("/");
 	root.dirent();
-	files[0] = root;
-	count = 1;
-	next = 1;
+	count = 0;
+	files[count++] = root;
 }
