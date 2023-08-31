@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "lnfs_file.hpp"
+#include "lnfs_dir.hpp"
 
 using namespace std;
 

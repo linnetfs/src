@@ -11,6 +11,10 @@
 File Dir::lookup(string p)
 {
 	lnfs_debug("lnfs_dir lookup {}, count: {}", p, count);
+
+	if (fh.is_path(p))
+		return fh;
+
 	for (int idx = 0; idx < count; idx++)
 	{
 		File f = files[idx];
@@ -18,6 +22,7 @@ File Dir::lookup(string p)
 		if (f.is_path(p))
 			return f;
 	}
+
 	lnfs_debug("lnfs_dir lookup {}: no such file or directory", p);
 	File f(p);
 	f.not_found();

@@ -10,10 +10,8 @@
 
 File LNFSMem::lookup(string p)
 {
-	lnfs_debug("lnfs lookup {}", p);
-	File f(p);
-	f.not_found();
-	return f;
+	lnfs_debug("lnfs_memfs lookup {}", p);
+	return root.lookup(p);
 }
 
 /******************************************************************************/
