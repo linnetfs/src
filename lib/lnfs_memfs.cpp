@@ -1,13 +1,13 @@
 /* Copyright (c) Jeremías Casteglione <jrmsdev@gmail.com> */
 /* See LICENSE file. */
 
-#include "lnfs_fs.hpp"
+#include "lnfs_memfs.hpp"
 #include "lnfs_log.hpp"
 
 /******************************************************************************/
 // lookup
 
-File LNFS::lookup(string p)
+File LNFSMem::lookup(string p)
 {
 	lnfs_debug("lnfs lookup {}, count: {}", p, count);
 	for (int idx = 0; idx < count; idx++)
@@ -24,9 +24,9 @@ File LNFS::lookup(string p)
 }
 
 /******************************************************************************/
-// LNFS
+// LNFSMem
 
-LNFS::LNFS(string n)
+LNFSMem::LNFSMem(string n)
 {
 	name = n;
 	File root("/");

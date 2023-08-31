@@ -5,11 +5,12 @@
 
 #include "lnfs_file.hpp"
 #include "lnfs_log.hpp"
+#include "lnfs_memfs.hpp"
 
 /******************************************************************************/
-// LNFS
+// fs
 
-static LNFS fs("memory");
+static LNFSMem fs("memory");
 
 /******************************************************************************/
 // init

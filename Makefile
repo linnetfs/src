@@ -13,7 +13,7 @@ LNFS_LIB := $(BUILDD)/lib$(LNFS_NAME).a
 
 LNFS_LIB_OBJS := $(BUILDD)/lnfs_$(LNFS_MODE).o
 LNFS_LIB_OBJS += $(BUILDD)/lnfs_file.o
-LNFS_LIB_OBJS += $(BUILDD)/lnfs_fs.o
+LNFS_LIB_OBJS += $(BUILDD)/lnfs_memfs.o
 
 LNFS_BUILD_H := $(BUILDD)/include/lnfs_build.hpp
 
@@ -85,14 +85,14 @@ LNFS_FILE_DEPS += $(SRCD)/lib/lnfs_file.cpp
 $(BUILDD)/lnfs_file.o: $(LNFS_FILE_DEPS)
 	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_file.o -c $(SRCD)/lib/lnfs_file.cpp
 
-# lnfs_fs.o
+# lnfs_memfs.o
 
-LNFS_FS_DEPS := $(LNFS_SRC_DEPS)
-LNFS_FS_DEPS += $(SRCD)/include/lnfs_fs.hpp
-LNFS_FS_DEPS += $(SRCD)/lib/lnfs_fs.cpp
+LNFS_MEMFS_DEPS := $(LNFS_SRC_DEPS)
+LNFS_MEMFS_DEPS += $(SRCD)/include/lnfs_memfs.hpp
+LNFS_MEMFS_DEPS += $(SRCD)/lib/lnfs_memfs.cpp
 
-$(BUILDD)/lnfs_fs.o: $(LNFS_FS_DEPS)
-	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_fs.o -c $(SRCD)/lib/lnfs_fs.cpp
+$(BUILDD)/lnfs_memfs.o: $(LNFS_MEMFS_DEPS)
+	$(CXX) $(CXX_FLAGS) -o $(BUILDD)/lnfs_memfs.o -c $(SRCD)/lib/lnfs_memfs.cpp
 
 # lnfs_$(LNFS_MODE).o
 

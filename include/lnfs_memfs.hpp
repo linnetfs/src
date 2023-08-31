@@ -7,10 +7,10 @@
 
 using namespace std;
 
-class LNFS {
+class LNFSMem {
 	public:
 		File lookup(string p);
-		LNFS(string n);
+		LNFSMem(string n);
 
 	private:
 		string name;
