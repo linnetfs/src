@@ -7,7 +7,7 @@
 #include <unistd.h> // for: R_OK and friends
 
 /******************************************************************************/
-// getattr
+// File::getattr
 //   man 7 inode
 
 int File::getattr(struct stat* stbuf)
@@ -30,7 +30,7 @@ int File::getattr(struct stat* stbuf)
 }
 
 /******************************************************************************/
-// access
+// File::access
 
 int File::access(int mask)
 {
@@ -47,7 +47,7 @@ int File::access(int mask)
 }
 
 /******************************************************************************/
-// dirent
+// File::dirent
 
 void File::dirent()
 {
@@ -55,7 +55,7 @@ void File::dirent()
 }
 
 /******************************************************************************/
-// is_dir
+// File::is_dir
 
 bool File::is_dir()
 {
@@ -66,7 +66,7 @@ bool File::is_dir()
 }
 
 /******************************************************************************/
-// is_path
+// File::is_path
 
 bool File::is_path(string p)
 {
@@ -75,7 +75,7 @@ bool File::is_path(string p)
 }
 
 /******************************************************************************/
-// not_found
+// File::not_found
 
 void File::not_found()
 {
@@ -83,7 +83,7 @@ void File::not_found()
 }
 
 /******************************************************************************/
-// is_not_found
+// File::is_not_found
 
 bool File::is_not_found()
 {
@@ -91,7 +91,7 @@ bool File::is_not_found()
 }
 
 /******************************************************************************/
-// name
+// File::name
 
 string File::name()
 {
@@ -99,7 +99,7 @@ string File::name()
 }
 
 /******************************************************************************/
-// init
+// File::init
 
 void File::init(string p)
 {
@@ -115,14 +115,50 @@ void File::init(string p)
 }
 
 /******************************************************************************/
-// File
+// File::File
 
 File::File()
 {
 	init("/");
+	dirent();
 }
 
 File::File(string p)
 {
 	init(p);
+}
+
+/******************************************************************************/
+// Dir::lookup
+//   man 7 path_resolution
+
+File Dir::lookup(string p)
+{
+	lnfs_debug("dir lookup {}, count: {}", p, count);
+	for (int idx = 0; idx < count; idx++)
+	{
+		File f = files[idx];
+		lnfs_debug("dir lookup check path {}", f.name());
+		if (f.is_path(p))
+			return f;
+	}
+	lnfs_debug("dir lookup {}: no such file or directory", p);
+	File f(p);
+	f.not_found();
+	return f;
+}
+
+/******************************************************************************/
+// Dir::Dir
+
+Dir::Dir()
+{
+	fh = File("/");
+	fh.dirent();
+}
+
+Dir::Dir(string path)
+{
+	fh = File(path);
+	fh.dirent();
 }

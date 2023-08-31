@@ -14,6 +14,5 @@ class LNFSMem {
 
 	private:
 		string name;
-		int count;
-		File files[1000];
+		Dir root;
 };

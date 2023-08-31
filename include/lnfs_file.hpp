@@ -39,3 +39,15 @@ class File {
 		void init(string p);
 		bool found;
 };
+
+class Dir {
+	public:
+		File lookup(string p);
+		Dir();
+		Dir(string path);
+
+	private:
+		int count;
+		File fh;
+		File files[1000];
+};
