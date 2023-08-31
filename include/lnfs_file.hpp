@@ -36,7 +36,6 @@ class File {
 
 	private:
 		string path;
-		bool dir;
 		void init(string p);
 		bool found;
 };

@@ -8,6 +8,7 @@
 
 /******************************************************************************/
 // getattr
+//   man 7 inode
 
 int File::getattr(struct stat* stbuf)
 {
@@ -49,8 +50,7 @@ int File::access(int mask)
 
 void File::dirent()
 {
-	dir = true;
-	mode = 0755;
+	mode = S_IFDIR | 0755;
 }
 
 /******************************************************************************/
@@ -58,7 +58,10 @@ void File::dirent()
 
 bool File::is_dir()
 {
-	return dir;
+	// man 7 indoe (The file type and mode)
+	if (S_ISDIR(mode))
+		return true;
+	return false;
 }
 
 /******************************************************************************/
@@ -100,8 +103,7 @@ string File::name()
 void File::init(string p)
 {
 	path = p;
-	dir  = false;
-	mode = 0644;
+	mode = S_IFREG | 0644;
 	nlink = 1;
 	uid = 0;
 	gid = 0;

@@ -6,6 +6,7 @@
 
 /******************************************************************************/
 // lookup
+//   man 7 path_resolution
 
 File LNFSMem::lookup(string p)
 {

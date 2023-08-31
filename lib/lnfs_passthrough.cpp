@@ -38,6 +38,10 @@ int lnfs_getattr(const char* path, struct stat* stbuf, struct fuse_file_info* fi
 		lnfs_error("passthrough getattr {} {}", path, -errno);
 		return -errno;
 	}
+	lnfs_debug("passthrough getattr {} mode={} nlink={} uid={} gid={} size={} blocks={} atime={} mtime={} ctime={}",
+		path, stbuf->st_mode, stbuf->st_nlink, stbuf->st_uid, stbuf->st_gid,
+		stbuf->st_size, stbuf->st_blocks, stbuf->st_atime, stbuf->st_mtime,
+		stbuf->st_ctime);
 	return 0;
 }
 
