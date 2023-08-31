@@ -59,10 +59,52 @@ int lnfs_access(const char* path, int mask)
 }
 
 /******************************************************************************/
+// readdir
+//   man 3 opendir
+//   man 3 readdir
+
+int lnfs_readdir(const char* path, void* buf, fuse_fill_dir_t filler,
+		off_t offset, struct fuse_file_info* fi, enum fuse_readdir_flags flags)
+{
+	lnfs_debug("memory readdir {}", path);
+
+	(void) offset;
+	(void) fi;
+	(void) flags;
+
+	File f = fs.lookup(path);
+	if (f.is_not_found())
+	{
+		int rc = -ENOENT;
+		lnfs_error("memory readdir {} {}", f.name(), rc);
+		return rc;
+	}
+
+	if (!f.is_dir())
+	{
+		int rc = -ENOTDIR;
+		lnfs_error("memory readdir {} {}", f.name(), rc);
+		return rc;
+	}
+
+	int rc;
+	rc = filler(buf, f.name().c_str(), NULL, 0, (fuse_fill_dir_flags) 0);
+	if (rc != 0)
+	{
+		int rc = -ENOMEM;
+		lnfs_error("memory readdir {} {}", f.name(), rc);
+		return rc;
+	}
+
+	return 0;
+}
+
+/******************************************************************************/
 // operations
 
 static const struct fuse_operations ops = {
 	.getattr = lnfs_getattr,
+	.readdir = lnfs_readdir,
 	.init    = lnfs_init,
 	.access  = lnfs_access,
 };
