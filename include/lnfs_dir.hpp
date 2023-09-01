@@ -5,6 +5,8 @@
 
 #include "lnfs_file.hpp"
 
+#define LNFS_DIR_LIMIT 1000
+
 class Dir {
 	public:
 		File lookup(string p);
@@ -14,5 +16,5 @@ class Dir {
 	private:
 		int count;
 		File fh;
-		File files[1000];
+		File files[LNFS_DIR_LIMIT];
 };
